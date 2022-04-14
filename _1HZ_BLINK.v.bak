@@ -1,0 +1,38 @@
+module _1HZ_BLINK (
+   input clk_50MHz,
+   input set_n,
+   output clk_1Hz
+	
+   );
+ 
+  // Constants (parameters) to create the frequencies needed:
+  // Input clock is 25 kHz, chosen arbitrarily.
+  // Formula is: (25 kHz / 100 Hz * 50% duty cycle)
+  // So for 100 Hz: 25,000 / 100 * 0.5 = 125
+  parameter c_CNT_1HZ   = 100000000;
+ 
+  // These signals will be the counters:
+  reg [31:0] r_CNT_1HZ = 0;
+   
+  // These signals will toggle at the frequencies needed:
+  reg        r_TOGGLE_1HZ   = 1'b0;
+   
+ 
+  // All always blocks toggle a specific signal at a different frequency.
+  // They all run continuously even if the switches are
+  // not selecting their particular output.
+   
+  always @ (posedge clk_50MHz)
+    begin
+      if (r_CNT_1HZ == c_CNT_1HZ-1) // -1, since counter starts at 0
+        begin        
+          r_TOGGLE_1HZ <= !r_TOGGLE_1HZ;
+          r_CNT_1HZ    <= 0;
+        end
+      else
+        r_CNT_1HZ <= r_CNT_1HZ + 1;
+    end
+ 
+assign clk_1Hz = r_TOGGLE_1HZ & set_n;
+
+endmodule
