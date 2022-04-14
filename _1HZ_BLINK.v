@@ -1,7 +1,7 @@
 module _1HZ_BLINK (
-   input clk_50MHz,
-   input set_n,
-   output clk_1Hz
+   input clk_50MHz, //PIN_N14
+   input set_n, //PIN_C10
+   output clk_1Hz //PIN_A19
 	
    );
  
