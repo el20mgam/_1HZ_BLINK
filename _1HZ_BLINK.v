@@ -1,26 +1,21 @@
 module _1HZ_BLINK (
-   input clk_50MHz,
-   input set_n,
-   output reg clk_1Hz = 0
+
+	input clk_50M,				//An input clock sginal from FPGA - PIN_N14
+	input set,	//Switch 0 - PIN_C10
+	output reg CLK_ind = 0 //Decimal Segment 2 - PIN_A19
 	
    );
  
-//Used to gain a 1Hz signal from 50MHz
-parameter div_1HZ = 100000000;
+reg clk_1hz = 0;
  
-//The counter:
-reg [31:0] count_1HZ = 0;
-   
-//Lowers Clock signal to 1HZ 
-  always @ (posedge clk_50MHz)
-    begin
-      if (count_1HZ == div_1HZ-1)
-        begin        
-          clk_1Hz <= !clk_1Hz;
-          count_1HZ    <= 0;
-        end
-      else
-        count_1HZ <= count_1HZ + 1;
-    end
+ ClockDivider blink (
+
+	clk_50M,
+	set,
+	clk_1hz
+	
+);
+
+assign CLK_ind = clk_1hz & set;
 
 endmodule
